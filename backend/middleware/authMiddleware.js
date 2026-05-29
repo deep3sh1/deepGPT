@@ -9,35 +9,29 @@ export const authMiddleware = async (req, res, next) => {
 
         const authHeader = req.headers.authorization;
 
-        // ✅ No token = treat as guest user (NOT error)
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
             req.user = null;
+            req.userId = null;
             return next();
         }
 
         const token = authHeader.split(" ")[1];
 
         try {
-            const decoded = jwt.verify(
-                token,
-                process.env.JWT_SECRET
-            );
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
             req.user = decoded;
+            req.userId = decoded.id || decoded._id; // ✅ FIX
 
         } catch (err) {
-            // ✅ Invalid token = still allow guest access
             req.user = null;
+            req.userId = null;
         }
 
         next();
 
     } catch (error) {
-
         console.error(error);
-
-        return res.status(500).json({
-            error: "Server error"
-        });
+        return res.status(500).json({ error: "Server error" });
     }
 };

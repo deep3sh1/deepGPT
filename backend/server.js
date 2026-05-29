@@ -9,63 +9,38 @@ import authRoutes from './routes/auth.js';
 dotenv.config();
 
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
-
-// MIDDLEWARE
 app.use(express.json());
 
-const allowedOrigins = [
-    'http://localhost:5173',
-    'https://deepgpt-frontend.onrender.com'
-];
-
+// ✅ FIXED CORS (LOCAL + PRODUCTION SAFE)
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'https://deepgpt-frontend.onrender.com'
+    ],
     credentials: true
 }));
 
-// ROUTES
 app.use('/chat', chatRoutes);
-
 app.use('/auth', authRoutes);
-
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-
-// DATABASE CONNECTION
 const connectDB = async () => {
-
     try {
-
-        await mongoose.connect(
-            process.env.MONGODB_URI
-        );
-
+        await mongoose.connect(process.env.MONGODB_URI);
         console.log('Connected to MongoDB');
 
         app.listen(PORT, () => {
-            console.log(
-                `Server is running on port ${PORT}`
-            );
+            console.log(`Server is running on port ${PORT}`);
         });
 
     } catch (error) {
-
-        console.error(
-            'Error connecting to MongoDB:',
-            error
-        );
+        console.error('Error connecting to MongoDB:', error);
     }
 };
 

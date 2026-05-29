@@ -18,63 +18,36 @@ const API_URL = import.meta.env.VITE_API_URL;
 function App() {
 
     const [prompt, setPrompt] = useState("");
-
     const [reply, setReply] = useState("");
 
     const [currentThreadId, setCurrentThreadId] =
         useState(uuidv1());
 
     const [prevchat, setPrevChat] = useState([]);
+    const [chatSessions, setChatSessions] = useState([]);
+    const [activeChatId, setActiveChatId] = useState(null);
 
-    const [chatSessions, setChatSessions] =
-        useState([]);
-
-    const [activeChatId, setActiveChatId] =
-        useState(null);
-
-    const [authMode, setAuthMode] =
-        useState("login");
-
-    const [showAuthPage, setShowAuthPage] =
-        useState(false);
+    const [authMode, setAuthMode] = useState("login");
+    const [showAuthPage, setShowAuthPage] = useState(false);
 
     const [name, setName] = useState("");
-
     const [email, setEmail] = useState("");
-
-    const [password, setPassword] =
-        useState("");
+    const [password, setPassword] = useState("");
 
     const [user, setUser] = useState(null);
 
 
-    // AUTO LOGIN
-    useEffect(() => {
-
-        const token =
-            localStorage.getItem("token");
-
-        const savedUser =
-            localStorage.getItem("user");
-
-        if (token && savedUser) {
-
-            setUser(JSON.parse(savedUser));
-
-            fetchThreads(token);
-        }
-
-    }, []);
-
-
-    // FETCH THREADS
+    // FIXED: safe fetch threads (no silent fail)
     const fetchThreads = async (token) => {
+
+        if (!token) return;
 
         try {
 
             const res = await fetch(
                 `${API_URL}/chat/threads`,
                 {
+                    method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -84,37 +57,62 @@ function App() {
             const data = await res.json();
 
             if (!res.ok) {
+                console.error("Thread fetch failed:", data);
 
                 localStorage.removeItem("token");
-
                 localStorage.removeItem("user");
 
                 setUser(null);
+                setChatSessions([]);
 
                 return;
             }
 
             if (!Array.isArray(data)) {
+                console.error("Invalid threads format:", data);
                 return;
             }
 
-            const formattedThreads =
-                data.map((thread) => ({
-
-                    id: thread.threadId,
-
-                    title: thread.title,
-
-                    messages: thread.messages
-                }));
+            const formattedThreads = data.map((thread) => ({
+                id: thread.threadId,
+                title: thread.title,
+                messages: thread.messages
+            }));
 
             setChatSessions(formattedThreads);
 
         } catch (err) {
-
-            console.error(err);
+            console.error("fetchThreads error:", err);
         }
     };
+
+
+    // FIXED: auto login (more stable)
+    useEffect(() => {
+
+        const token = localStorage.getItem("token");
+        const savedUser = localStorage.getItem("user");
+
+        if (!token || !savedUser) return;
+
+        try {
+            const parsedUser = JSON.parse(savedUser);
+
+            setUser(parsedUser);
+
+            // important: delay avoids race condition in some cases
+            setTimeout(() => {
+                fetchThreads(token);
+            }, 50);
+
+        } catch (err) {
+            console.error("User parse error:", err);
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+        }
+
+    }, []);
 
 
     // REGISTER
@@ -126,14 +124,10 @@ function App() {
                 `${API_URL}/auth/register`,
                 {
                     method: "POST",
-
                     headers: {
-                        "Content-Type":
-                            "application/json"
+                        "Content-Type": "application/json"
                     },
-
                     body: JSON.stringify({
-
                         name,
                         email,
                         password
@@ -145,25 +139,16 @@ function App() {
 
             if (data.token) {
 
-                localStorage.setItem(
-                    "token",
-                    data.token
-                );
-
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify(data.user)
-                );
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify(data.user));
 
                 setUser(data.user);
-
                 setShowAuthPage(false);
 
                 fetchThreads(data.token);
             }
 
         } catch (err) {
-
             console.error(err);
         }
     };
@@ -178,14 +163,10 @@ function App() {
                 `${API_URL}/auth/login`,
                 {
                     method: "POST",
-
                     headers: {
-                        "Content-Type":
-                            "application/json"
+                        "Content-Type": "application/json"
                     },
-
                     body: JSON.stringify({
-
                         email,
                         password
                     })
@@ -196,25 +177,16 @@ function App() {
 
             if (data.token) {
 
-                localStorage.setItem(
-                    "token",
-                    data.token
-                );
-
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify(data.user)
-                );
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify(data.user));
 
                 setUser(data.user);
-
                 setShowAuthPage(false);
 
                 fetchThreads(data.token);
             }
 
         } catch (err) {
-
             console.error(err);
         }
     };
@@ -224,13 +196,10 @@ function App() {
     const logout = () => {
 
         localStorage.removeItem("token");
-
         localStorage.removeItem("user");
 
         setUser(null);
-
         setChatSessions([]);
-
         setPrevChat([]);
     };
 
@@ -240,13 +209,9 @@ function App() {
         const newId = uuidv1();
 
         setCurrentThreadId(newId);
-
         setPrevChat([]);
-
         setPrompt("");
-
         setReply("");
-
         setActiveChatId(newId);
     };
 
@@ -254,9 +219,7 @@ function App() {
     const openChat = (chat) => {
 
         setCurrentThreadId(chat.id);
-
         setPrevChat(chat.messages);
-
         setActiveChatId(chat.id);
     };
 
@@ -318,25 +281,19 @@ function App() {
                 showAuthPage ? (
 
                     <AuthPage
-
                         authMode={authMode}
-
                         setAuthMode={setAuthMode}
 
                         name={name}
-
                         setName={setName}
 
                         email={email}
-
                         setEmail={setEmail}
 
                         password={password}
-
                         setPassword={setPassword}
 
                         login={login}
-
                         register={register}
                     />
 
@@ -345,7 +302,6 @@ function App() {
                     <div className="app">
 
                         <Sidebar />
-
                         <ChatWindow />
 
                     </div>
