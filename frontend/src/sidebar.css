@@ -1,0 +1,199 @@
+.sidebar {
+
+    width: 280px;
+
+    height: 100vh;
+
+    background-color: #171717;
+
+    border-right: 1px solid #2a2a2a;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    overflow: hidden;
+}
+
+.sidebar-top {
+
+    padding: 12px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    flex-direction: column;
+
+    height: calc(100vh - 90px);
+}
+
+.new-chat-btn {
+
+    width: 100%;
+
+    height: 46px;
+
+    border: 1px solid #3a3a3a;
+
+    background: transparent;
+
+    color: white;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    gap: 12px;
+
+    padding: 0 16px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    margin-bottom: 16px;
+}
+
+.new-chat-btn:hover {
+
+    background-color: #2a2a2a;
+}
+
+.chat-list {
+
+    overflow-y: auto;
+
+    flex: 1;
+
+    padding-right: 4px;
+}
+
+.chat-list::-webkit-scrollbar {
+
+    width: 5px;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+
+    background-color: #3a3a3a;
+
+    border-radius: 20px;
+}
+
+.chat-item {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    color: white;
+
+    margin-bottom: 4px;
+
+    transition: 0.2s;
+}
+
+.chat-item:hover {
+
+    background-color: #2a2a2a;
+}
+
+.active-chat {
+
+    background-color: #2a2a2a;
+}
+
+.chat-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    overflow: hidden;
+}
+
+.chat-left span {
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    font-size: 14px;
+}
+
+.sidebar-bottom {
+
+    border-top: 1px solid #2a2a2a;
+
+    padding: 12px;
+}
+
+.user-box {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    color: white;
+}
+
+.user-name {
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.user-email {
+
+    font-size: 12px;
+
+    color: #9e9e9e;
+}
+
+.logout-btn {
+
+    width: 36px;
+
+    height: 36px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background-color: #2a2a2a;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.logout-btn:hover {
+
+    background-color: #3a3a3a;
+}

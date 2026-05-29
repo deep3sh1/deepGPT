@@ -1,0 +1,11 @@
+input::placeholder {
+    color: #9e9e9e !important;
+    opacity: 1;
+}
+
+input:focus {
+    box-shadow: none !important;
+    border: 1px solid #10a37f !important;
+    background-color: #1f1f1f !important;
+    color: white !important;
+}
