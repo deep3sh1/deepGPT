@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './chatwindow.css';
 
 import { DNA } from 'react-loader-spinner';
-import { MyContext } from './MyContext';
+import { MyContext } from './MyContext.jsx';
 
 import {
     FaPaperPlane,

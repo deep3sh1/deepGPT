@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './sidebar.css';
 
-import { MyContext } from './MyContext';
+import { MyContext } from './MyContext.jsx';
 
 import {
     FaPlus,

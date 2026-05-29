@@ -1,10 +1,10 @@
 import './App.css';
 
-import Sidebar from './sidebar';
-import ChatWindow from './chatwindow';
-import AuthPage from './AuthPage';
+import Sidebar from './sidebar.jsx';
+import ChatWindow from './Chatwindow.jsx';
+import AuthPage from './AuthPage.jsx';
 
-import { MyContext } from './MyContext';
+import { MyContext } from './MyContext.jsx';
 
 import {
     useState,
