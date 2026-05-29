@@ -16,11 +16,21 @@ const PORT = process.env.PORT || 3000;
 // MIDDLEWARE
 app.use(express.json());
 
+const allowedOrigins = [
+    'http://localhost:5173',
+    'https://deepgpt-frontend.onrender.com'
+];
+
 app.use(cors({
-    origin: process.env.CLIENT_URL,
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
-
 
 // ROUTES
 app.use('/chat', chatRoutes);
