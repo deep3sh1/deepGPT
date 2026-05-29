@@ -1,6 +1,6 @@
 import './App.css';
 
-import Sidebar from './sidebar.jsx';
+import Sidebar from './Sidebar.jsx';
 import ChatWindow from './Chatwindow.jsx';
 import AuthPage from './AuthPage.jsx';
 
