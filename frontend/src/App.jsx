@@ -36,8 +36,6 @@ function App() {
 
     const [user, setUser] = useState(null);
 
-
-    // FIXED: safe fetch threads (no silent fail)
     const fetchThreads = async (token) => {
 
         if (!token) return;
@@ -49,14 +47,16 @@ function App() {
                 {
                     method: "GET",
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        "Content-Type": "application/json",
+                        ...(token && { Authorization: `Bearer ${token}` })
                     }
                 }
             );
 
             const data = await res.json();
 
-            if (!res.ok) {
+            if (!res.ok || !Array.isArray(data)) {
+
                 console.error("Thread fetch failed:", data);
 
                 localStorage.removeItem("token");
@@ -68,15 +68,10 @@ function App() {
                 return;
             }
 
-            if (!Array.isArray(data)) {
-                console.error("Invalid threads format:", data);
-                return;
-            }
-
             const formattedThreads = data.map((thread) => ({
                 id: thread.threadId,
                 title: thread.title,
-                messages: thread.messages
+                messages: thread.messages || []
             }));
 
             setChatSessions(formattedThreads);
@@ -86,8 +81,6 @@ function App() {
         }
     };
 
-
-    // FIXED: auto login (more stable)
     useEffect(() => {
 
         const token = localStorage.getItem("token");
@@ -96,16 +89,16 @@ function App() {
         if (!token || !savedUser) return;
 
         try {
-            const parsedUser = JSON.parse(savedUser);
 
+            const parsedUser = JSON.parse(savedUser);
             setUser(parsedUser);
 
-            // important: delay avoids race condition in some cases
             setTimeout(() => {
                 fetchThreads(token);
             }, 50);
 
         } catch (err) {
+
             console.error("User parse error:", err);
 
             localStorage.removeItem("token");
@@ -114,8 +107,6 @@ function App() {
 
     }, []);
 
-
-    // REGISTER
     const register = async () => {
 
         try {
@@ -153,8 +144,6 @@ function App() {
         }
     };
 
-
-    // LOGIN
     const login = async () => {
 
         try {
@@ -191,8 +180,6 @@ function App() {
         }
     };
 
-
-    // LOGOUT
     const logout = () => {
 
         localStorage.removeItem("token");
@@ -201,8 +188,8 @@ function App() {
         setUser(null);
         setChatSessions([]);
         setPrevChat([]);
+        setActiveChatId(null);
     };
-
 
     const createNewChat = () => {
 
@@ -215,14 +202,12 @@ function App() {
         setActiveChatId(newId);
     };
 
-
     const openChat = (chat) => {
 
         setCurrentThreadId(chat.id);
-        setPrevChat(chat.messages);
+        setPrevChat(chat.messages || []);
         setActiveChatId(chat.id);
     };
-
 
     const providerValue = {
 
@@ -270,7 +255,6 @@ function App() {
         password,
         setPassword
     };
-
 
     return (
 

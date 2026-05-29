@@ -9,7 +9,6 @@ import {
     FaPlus,
     FaCommentAlt,
     FaTrash,
-    FaSignOutAlt,
     FaUserCircle,
     FaRobot
 } from 'react-icons/fa';
@@ -32,7 +31,6 @@ function Sidebar() {
         logout
 
     } = useContext(MyContext);
-
 
     const deleteChat = async (threadId, e) => {
 
@@ -71,12 +69,10 @@ function Sidebar() {
         }
     };
 
-
     return (
 
         <div className="sidebar">
 
-            {/* TOP */}
             <div className="sidebar-top">
 
                 <div
@@ -103,7 +99,6 @@ function Sidebar() {
                     <span>New chat</span>
                 </button>
 
-                {/* CHAT LIST */}
                 <div className="chat-list">
 
                     {chatSessions.map((chat) => (
@@ -146,8 +141,6 @@ function Sidebar() {
 
             </div>
 
-
-            {/* BOTTOM */}
             <div className="sidebar-bottom">
 
                 <div className="user-box">

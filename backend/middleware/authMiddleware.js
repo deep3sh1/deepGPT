@@ -3,12 +3,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const authMiddleware = async (req, res, next) => {
-
+export const authMiddleware = (req, res, next) => {
     try {
-
         const authHeader = req.headers.authorization;
 
+        // allow guest users
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
             req.user = null;
             req.userId = null;
@@ -21,7 +20,9 @@ export const authMiddleware = async (req, res, next) => {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
             req.user = decoded;
-            req.userId = decoded.id || decoded._id; // ✅ FIX
+
+            // ✅ FIX: normalize userId properly
+            req.userId = decoded.id || decoded._id || null;
 
         } catch (err) {
             req.user = null;

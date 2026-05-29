@@ -30,6 +30,10 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
+app.get('/test', (req, res) => {
+    res.json({ ok: true });
+});
+
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGODB_URI);
