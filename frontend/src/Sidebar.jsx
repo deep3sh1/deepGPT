@@ -32,42 +32,47 @@ function Sidebar() {
 
     } = useContext(MyContext);
 
-    const deleteChat = async (threadId, e) => {
+   const deleteChat = async (threadId, e) => {
 
-        e.stopPropagation();
+    e.stopPropagation();
 
-        try {
+    try {
 
-            const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
-            const res = await fetch(
-                `${API_URL}/chat/threads/${threadId}`,
-                {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                        ...(token && {
-                            Authorization: `Bearer ${token}`
-                        })
-                    }
+        const res = await fetch(
+            `${API_URL}/chat/threads/${threadId}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(token && {
+                        Authorization: `Bearer ${token}`
+                    })
                 }
-            );
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                console.error(data.error || "Failed to delete chat");
-                return;
             }
+        );
 
-            setChatSessions(prev =>
-                prev.filter(chat => chat.id !== threadId)
-            );
+        const data = await res.json();
 
-        } catch (err) {
-            console.error("Delete chat error:", err);
+        if (!res.ok) {
+            console.error(data.error || "Failed to delete chat");
+            return;
         }
-    };
+
+        setChatSessions(prev =>
+            prev.filter(chat => chat.id !== threadId)
+        );
+
+       
+        if (activeChatId === threadId) {
+            createNewChat();
+        }
+
+    } catch (err) {
+        console.error("Delete chat error:", err);
+    }
+};
 
     return (
 
