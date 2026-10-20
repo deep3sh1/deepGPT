@@ -40,7 +40,9 @@ function ChatWindow() {
         logout,
 
         setShowAuthPage,
-        setAuthMode
+        setAuthMode,
+
+        setSidebarOpen
 
     } = useContext(MyContext);
 
@@ -331,7 +333,16 @@ function ChatWindow() {
                 }}
             >
 
-                <div className="d-flex align-items-center gap-2">
+                <div className="d-flex align-items-center gap-2" style={{ minWidth: 0 }}>
+
+                    {/* HAMBURGER — mobile only */}
+                    <button
+                        className="hamburger-btn"
+                        onClick={() => setSidebarOpen(prev => !prev)}
+                        aria-label="Open sidebar"
+                    >
+                        &#9776;
+                    </button>
 
                     <FaRobot
                         size={18}
@@ -351,6 +362,7 @@ function ChatWindow() {
 
                     {/* MODEL SELECTOR */}
                     <select
+                        className="model-select-mobile"
                         value={selectedModel}
                         onChange={(e) =>
                             setSelectedModel(

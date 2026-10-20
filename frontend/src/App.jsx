@@ -27,6 +27,8 @@ function App() {
     const [chatSessions, setChatSessions] = useState([]);
     const [activeChatId, setActiveChatId] = useState(null);
 
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
     const [authMode, setAuthMode] = useState("login");
     const [showAuthPage, setShowAuthPage] = useState(false);
 
@@ -253,7 +255,10 @@ function App() {
         setEmail,
 
         password,
-        setPassword
+        setPassword,
+
+        sidebarOpen,
+        setSidebarOpen
     };
 
     return (

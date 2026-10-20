@@ -197,3 +197,66 @@
 
     background-color: #3a3a3a;
 }
+
+/* ─── MOBILE HAMBURGER BUTTON ─── */
+.hamburger-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    padding: 4px 8px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* ─── SIDEBAR CLOSE BUTTON (mobile only) ─── */
+.sidebar-close-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #9e9e9e;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 4px;
+    line-height: 1;
+}
+
+/* ─── MOBILE OVERLAY ─── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+@media (max-width: 767px) {
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        width: 260px;
+    }
+
+    .sidebar.sidebar-open {
+        transform: translateX(0);
+    }
+
+    .hamburger-btn {
+        display: flex;
+    }
+
+    .sidebar-close-btn {
+        display: block;
+    }
+
+    .sidebar-overlay.sidebar-open {
+        display: block;
+    }
+}

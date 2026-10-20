@@ -16,3 +16,14 @@ textarea::-webkit-scrollbar-thumb {
     background: #555;
     border-radius: 10px;
 }
+
+@media (max-width: 767px) {
+
+    /* Keep model selector compact so it doesn't wrap */
+    .model-select-mobile {
+        font-size: 11px !important;
+        padding: 2px 4px !important;
+        margin-left: 4px !important;
+        max-width: 80px;
+    }
+}

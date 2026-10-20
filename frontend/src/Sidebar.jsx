@@ -28,7 +28,10 @@ function Sidebar() {
         activeChatId,
 
         user,
-        logout
+        logout,
+
+        sidebarOpen,
+        setSidebarOpen
 
     } = useContext(MyContext);
 
@@ -76,7 +79,15 @@ function Sidebar() {
 
     return (
 
-        <div className="sidebar">
+        <>
+
+        {/* MOBILE OVERLAY */}
+        <div
+            className={`sidebar-overlay ${sidebarOpen ? "sidebar-open" : ""}`}
+            onClick={() => setSidebarOpen(false)}
+        />
+
+        <div className={`sidebar ${sidebarOpen ? "sidebar-open" : ""}`}>
 
             <div className="sidebar-top">
 
@@ -94,6 +105,16 @@ function Sidebar() {
                     <span style={{ fontWeight: "800", color: "#edf2f1" }}>
                         DeepGPT
                     </span>
+
+                    {/* CLOSE BUTTON — mobile only */}
+                    <button
+                        className="sidebar-close-btn"
+                        onClick={() => setSidebarOpen(false)}
+                        aria-label="Close sidebar"
+                    >
+                        &#x2715;
+                    </button>
+
                 </div>
 
                 <button
@@ -173,6 +194,8 @@ function Sidebar() {
             </div>
 
         </div>
+
+        </>
     );
 }
 
