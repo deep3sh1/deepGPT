@@ -125,28 +125,49 @@ router.post("/chats", authMiddleware, async (req, res) => {
 
     try {
 
-        let selectedModel = "openai/gpt-oss-20b";
+        let selectedModel = "openai/gpt-4o-mini";
 
         switch (model) {
+            case "gpt":
+                selectedModel = "openai/gpt-4o-mini";
+                break;
             case "gemini":
-                selectedModel = "google/gemma-3n-e4b-it";
+                selectedModel = "google/gemini-2.5-flash";
                 break;
             case "claude":
-                selectedModel = "microsoft/phi-3-mini-128k-instruct";
+                selectedModel = "anthropic/claude-haiku-4.5";
+                break;
+            case "grok":
+                selectedModel = "x-ai/grok-4.5";
                 break;
             case "deepseek":
                 selectedModel = "deepseek/deepseek-chat";
                 break;
             case "llama":
-                selectedModel = "meta-llama/llama-3.2-3b-instruct";
+                selectedModel = "meta-llama/llama-3.3-70b-instruct";
                 break;
+            case "qwen":
+                selectedModel = "qwen/qwen-2.5-72b-instruct";
+                break;
+            default:
+                selectedModel = "openai/gpt-4o-mini";
         }
 
-        const completion = await openai.chat.completions.create({
-            model: selectedModel,
-            messages: [{ role: "user", content: message }],
-            max_tokens: 1000
-        });
+        let completion;
+        try {
+            completion = await openai.chat.completions.create({
+                model: selectedModel,
+                messages: [{ role: "user", content: message }],
+                max_tokens: 1000
+            });
+        } catch (modelErr) {
+            console.warn(`Model ${selectedModel} failed (${modelErr?.message}), falling back to openai/gpt-4o-mini...`);
+            completion = await openai.chat.completions.create({
+                model: "openai/gpt-4o-mini",
+                messages: [{ role: "user", content: message }],
+                max_tokens: 1000
+            });
+        }
 
         const aiResponse =
             completion?.choices?.[0]?.message?.content ||
