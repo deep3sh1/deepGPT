@@ -118,7 +118,10 @@ function Sidebar() {
                 </div>
 
                 <button
-                    onClick={createNewChat}
+                    onClick={() => {
+                        createNewChat();
+                        setSidebarOpen(false);
+                    }}
                     className="new-chat-btn"
                 >
                     <FaPlus />
@@ -131,7 +134,10 @@ function Sidebar() {
 
                         <div
                             key={chat.id}
-                            onClick={() => openChat(chat)}
+                            onClick={() => {
+                                openChat(chat);
+                                setSidebarOpen(false);
+                            }}
                             className={`chat-item ${
                                 activeChatId === chat.id
                                     ? "active-chat"
@@ -141,7 +147,7 @@ function Sidebar() {
 
                             <div className="chat-left">
 
-                                <FaCommentAlt size={13} />
+                                <FaCommentAlt size={13} style={{ flexShrink: 0 }} />
 
                                 <span>
                                     {chat.title}
@@ -153,7 +159,9 @@ function Sidebar() {
                                 size={12}
                                 style={{
                                     cursor: "pointer",
-                                    color: "#ff4d4d"
+                                    color: "#ff4d4d",
+                                    flexShrink: 0,
+                                    marginLeft: "8px"
                                 }}
                                 onClick={(e) =>
                                     deleteChat(chat.id, e)
@@ -171,17 +179,17 @@ function Sidebar() {
 
                 <div className="user-box">
 
-                    <div className="d-flex align-items-center gap-2">
+                    <div className="d-flex align-items-center gap-2" style={{ minWidth: 0, overflow: "hidden" }}>
 
-                        <FaUserCircle size={24} />
+                        <FaUserCircle size={24} style={{ flexShrink: 0 }} />
 
-                        <div>
+                        <div style={{ minWidth: 0, overflow: "hidden" }}>
 
-                            <div className="user-name">
+                            <div className="user-name" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                                 {user?.name || "Using as Guest"}
                             </div>
 
-                            <div className="user-email">
+                            <div className="user-email" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                                 {user?.email || "No account connected"}
                             </div>
 

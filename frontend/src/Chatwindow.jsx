@@ -310,30 +310,17 @@ function ChatWindow() {
     return (
 
         <div
-            className="d-flex flex-column text-white"
+            className="chat-window-container d-flex flex-column text-white"
             style={{
-                backgroundColor: "#212121",
-                height: "100vh",
                 flex: 1,
                 overflow: "hidden"
             }}
         >
 
             {/* HEADER */}
-            <div
-                className="d-flex align-items-center justify-content-between px-4 flex-shrink-0"
-                style={{
-                    height: "60px",
-                    minHeight: "60px",
-                    borderBottom: "1px solid #2f2f2f",
-                    backgroundColor: "#212121",
-                    position: "sticky",
-                    top: 0,
-                    zIndex: 1000
-                }}
-            >
+            <div className="chat-header d-flex align-items-center justify-content-between flex-shrink-0">
 
-                <div className="d-flex align-items-center gap-2" style={{ minWidth: 0 }}>
+                <div className="d-flex align-items-center gap-2 header-left" style={{ minWidth: 0, flexShrink: 1 }}>
 
                     {/* HAMBURGER — mobile only */}
                     <button
@@ -347,14 +334,16 @@ function ChatWindow() {
                     <FaRobot
                         size={18}
                         style={{
-                            color: "#10a37f"
+                            color: "#10a37f",
+                            flexShrink: 0
                         }}
                     />
 
                     <span
-                        className="fw-semibold"
+                        className="fw-semibold chat-title"
                         style={{
-                            fontSize: "15px"
+                            fontSize: "15px",
+                            whiteSpace: "nowrap"
                         }}
                     >
                         DeepGPT
@@ -369,15 +358,6 @@ function ChatWindow() {
                                 e.target.value
                             )
                         }
-                        style={{
-                            backgroundColor: "#2f2f2f",
-                            color: "white",
-                            border: "1px solid #3a3a3a",
-                            borderRadius: "6px",
-                            padding: "4px 8px",
-                            fontSize: "13px",
-                            marginLeft: "10px"
-                        }}
                     >
 
                         <option value="gpt">
@@ -414,13 +394,14 @@ function ChatWindow() {
 
                 {user ? (
 
-                    <div className="d-flex align-items-center gap-3">
+                    <div className="d-flex align-items-center gap-2 gap-sm-3 header-right" style={{ flexShrink: 0 }}>
 
-                        <div className="d-flex align-items-center gap-2">
+                        <div className="d-flex align-items-center gap-2" style={{ minWidth: 0 }}>
 
-                            <FaUserCircle size={22} />
+                            <FaUserCircle size={22} style={{ flexShrink: 0 }} />
 
                             <span
+                                className="header-user-name"
                                 style={{
                                     fontSize: "14px"
                                 }}
@@ -435,8 +416,13 @@ function ChatWindow() {
                             className="btn btn-sm text-white"
                             style={{
                                 backgroundColor: "#2f2f2f",
-                                border: "1px solid #3a3a3a"
+                                border: "1px solid #3a3a3a",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center"
                             }}
+                            title="Logout"
+                            aria-label="Logout"
                         >
 
                             <FaSignOutAlt />
@@ -447,13 +433,14 @@ function ChatWindow() {
 
                 ) : (
 
-                    <div className="d-flex gap-2">
+                    <div className="d-flex gap-2 header-right" style={{ flexShrink: 0 }}>
 
                         <button
-                            className="btn btn-sm text-white"
+                            className="btn btn-sm text-white auth-header-btn"
                             style={{
                                 backgroundColor: "#2f2f2f",
-                                border: "1px solid #3a3a3a"
+                                border: "1px solid #3a3a3a",
+                                whiteSpace: "nowrap"
                             }}
                             onClick={() => {
 
@@ -466,10 +453,11 @@ function ChatWindow() {
                         </button>
 
                         <button
-                            className="btn btn-sm text-white"
+                            className="btn btn-sm text-white auth-header-btn"
                             style={{
                                 backgroundColor: "#10a37f",
-                                border: "none"
+                                border: "none",
+                                whiteSpace: "nowrap"
                             }}
                             onClick={() => {
 
@@ -488,10 +476,11 @@ function ChatWindow() {
 
             {/* CHAT AREA */}
             <div
-                className="flex-grow-1 overflow-auto px-3 py-3 d-flex justify-content-center"
+                className="flex-grow-1 overflow-auto px-2 px-sm-3 py-3 d-flex justify-content-center"
                 style={{
                     minHeight: 0,
-                    paddingBottom: "120px"
+                    paddingBottom: "24px",
+                    WebkitOverflowScrolling: "touch"
                 }}
             >
 
@@ -504,11 +493,12 @@ function ChatWindow() {
 
                     {prevchat.length === 0 ? (
 
-                        <div className="d-flex flex-column justify-content-center align-items-center h-100">
+                        <div className="d-flex flex-column justify-content-center align-items-center h-100 text-center px-3">
 
                             <h1
                                 style={{
-                                    fontSize: "40px"
+                                    fontSize: "clamp(24px, 6vw, 40px)",
+                                    fontWeight: "700"
                                 }}
                             >
                                 How can I help you?
@@ -547,7 +537,7 @@ function ChatWindow() {
 
                                             maxWidth:
                                                 msg.role === "user"
-                                                    ? "75%"
+                                                    ? "min(85%, 650px)"
                                                     : "100%",
 
                                             width:
@@ -610,20 +600,15 @@ function ChatWindow() {
             </div>
 
             {/* INPUT */}
-            <div
-                className="px-3 pb-4 flex-shrink-0"
-                style={{
-                    backgroundColor: "#212121"
-                }}
-            >
+            <div className="chat-input-wrapper px-2 px-sm-3 pb-3 pb-sm-4 flex-shrink-0">
 
                 <div
                     className="mx-auto rounded-4 d-flex align-items-end px-3 py-2"
                     style={{
-                        maxWidth: "850px",
+                        maxWidth: "800px",
                         backgroundColor: "#2f2f2f",
                         border: "1px solid #3a3a3a",
-                        gap: "10px"
+                        gap: "8px"
                     }}
                 >
 
@@ -632,9 +617,11 @@ function ChatWindow() {
                         rows="1"
                         value={prompt}
                         placeholder="Message DeepGPT"
-                        onChange={(e) =>
-                            setPrompt(e.target.value)
-                        }
+                        onChange={(e) => {
+                            setPrompt(e.target.value);
+                            e.target.style.height = "24px";
+                            e.target.style.height = Math.min(e.target.scrollHeight, 180) + "px";
+                        }}
                         onKeyDown={(e) => {
 
                             if (
@@ -650,10 +637,11 @@ function ChatWindow() {
                         className="form-control bg-transparent border-0 text-white shadow-none"
                         style={{
                             resize: "none",
-                            fontSize: "15px",
+                            fontSize: "16px",
                             minHeight: "24px",
-                            maxHeight: "200px",
-                            overflowY: "auto"
+                            maxHeight: "180px",
+                            overflowY: "auto",
+                            lineHeight: "1.5"
                         }}
                     />
 
@@ -666,6 +654,7 @@ function ChatWindow() {
                             backgroundColor: "#10a37f",
                             color: "white"
                         }}
+                        aria-label="Send message"
                     >
 
                         <FaPaperPlane size={13} />
@@ -676,7 +665,7 @@ function ChatWindow() {
 
                 {/* FOOTER LINE */}
                 <div
-                    className="text-center mt-2"
+                    className="text-center mt-2 px-2"
                     style={{
                         fontSize: "12px",
                         color: "#8e8e8e"

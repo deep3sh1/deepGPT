@@ -12,36 +12,29 @@ function AuthPage({
     password,
     setPassword,
     login,
-    register
+    register,
+    onClose
 }) {
 
     return (
-        <div
-            className="d-flex justify-content-center align-items-center text-white"
-            style={{
-                height: "100vh",
-                backgroundColor: "#212121"
-            }}
-        >
+        <div className="auth-page-container d-flex justify-content-center align-items-center text-white">
 
-            <div
-                style={{
-                    width: "420px",
-                    backgroundColor: "#171717",
-                    border: "1px solid #2f2f2f",
-                    borderRadius: "18px",
-                    padding: "40px"
-                }}
-            >
+            <div className="auth-card">
+
+                {onClose && (
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="auth-close-btn"
+                        aria-label="Close"
+                    >
+                        &#x2715;
+                    </button>
+                )}
 
                 <div className="text-center mb-4">
 
-                    <h1
-                        style={{
-                            fontSize: "34px",
-                            fontWeight: "700"
-                        }}
-                    >
+                    <h1 className="auth-title">
                         DeepGPT
                     </h1>
 
@@ -65,7 +58,7 @@ function AuthPage({
                         placeholder="Enter your name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="form-control mb-3 bg-dark text-white border-0"
+                        className="form-control auth-input mb-3 bg-dark text-white border-0"
                         style={{
                             height: "48px"
                         }}
@@ -77,7 +70,7 @@ function AuthPage({
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="form-control mb-3 bg-dark text-white border-0"
+                    className="form-control auth-input mb-3 bg-dark text-white border-0"
                     style={{
                         height: "48px"
                     }}
@@ -88,7 +81,7 @@ function AuthPage({
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="form-control mb-4 bg-dark text-white border-0"
+                    className="form-control auth-input mb-4 bg-dark text-white border-0"
                     style={{
                         height: "48px"
                     }}

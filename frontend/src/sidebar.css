@@ -3,6 +3,7 @@
     width: 280px;
 
     height: 100vh;
+    height: 100dvh;
 
     background-color: #171717;
 
@@ -12,9 +13,9 @@
 
     flex-direction: column;
 
-    justify-content: space-between;
-
     overflow: hidden;
+
+    flex-shrink: 0;
 }
 
 .sidebar-top {
@@ -27,7 +28,9 @@
 
     flex-direction: column;
 
-    height: calc(100vh - 90px);
+    flex: 1;
+
+    min-height: 0;
 }
 
 .new-chat-btn {
@@ -145,6 +148,10 @@
     border-top: 1px solid #2a2a2a;
 
     padding: 12px;
+
+    flex-shrink: 0;
+
+    background-color: #171717;
 }
 
 .user-box {
@@ -208,6 +215,13 @@
     padding: 4px 8px;
     cursor: pointer;
     line-height: 1;
+    border-radius: 6px;
+    transition: background-color 0.15s;
+    flex-shrink: 0;
+}
+
+.hamburger-btn:hover {
+    background-color: #2a2a2a;
 }
 
 /* ─── SIDEBAR CLOSE BUTTON (mobile only) ─── */
@@ -219,8 +233,15 @@
     font-size: 18px;
     cursor: pointer;
     margin-left: auto;
-    padding: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
     line-height: 1;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.sidebar-close-btn:hover {
+    color: white;
+    background-color: #2a2a2a;
 }
 
 /* ─── MOBILE OVERLAY ─── */
@@ -228,20 +249,27 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 998;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 1100;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
 
     .sidebar {
         position: fixed;
         top: 0;
         left: 0;
-        z-index: 999;
+        bottom: 0;
+        z-index: 1200;
         transform: translateX(-100%);
-        transition: transform 0.25s ease;
-        width: 260px;
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 280px;
+        max-width: 82vw;
+        height: 100%;
+        height: 100dvh;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
     }
 
     .sidebar.sidebar-open {
@@ -250,10 +278,14 @@
 
     .hamburger-btn {
         display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .sidebar-close-btn {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .sidebar-overlay.sidebar-open {

@@ -284,6 +284,7 @@ function App() {
 
                         login={login}
                         register={register}
+                        onClose={() => setShowAuthPage(false)}
                     />
 
                 ) : (
