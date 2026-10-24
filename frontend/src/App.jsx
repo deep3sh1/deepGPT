@@ -13,7 +13,7 @@ import {
 
 import { v1 as uuidv1 } from 'uuid';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function App() {
 
@@ -31,6 +31,8 @@ function App() {
 
     const [authMode, setAuthMode] = useState("login");
     const [showAuthPage, setShowAuthPage] = useState(false);
+    const [authError, setAuthError] = useState("");
+    const [authLoading, setAuthLoading] = useState(false);
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -110,6 +112,14 @@ function App() {
     }, []);
 
     const register = async () => {
+        setAuthError("");
+
+        if (!name.trim() || !email.trim() || !password.trim()) {
+            setAuthError("Please fill in all fields");
+            return;
+        }
+
+        setAuthLoading(true);
 
         try {
 
@@ -121,8 +131,8 @@ function App() {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        name,
-                        email,
+                        name: name.trim(),
+                        email: email.trim(),
                         password
                     })
                 }
@@ -130,23 +140,40 @@ function App() {
 
             const data = await res.json();
 
-            if (data.token) {
+            if (res.ok && data.token) {
 
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("user", JSON.stringify(data.user));
 
                 setUser(data.user);
                 setShowAuthPage(false);
+                setAuthError("");
+                setName("");
+                setEmail("");
+                setPassword("");
 
                 fetchThreads(data.token);
+            } else {
+                setAuthError(data.error || "Registration failed. Please try again.");
             }
 
         } catch (err) {
             console.error(err);
+            setAuthError("Unable to connect to server. Please check backend connection.");
+        } finally {
+            setAuthLoading(false);
         }
     };
 
     const login = async () => {
+        setAuthError("");
+
+        if (!email.trim() || !password.trim()) {
+            setAuthError("Please enter both email and password");
+            return;
+        }
+
+        setAuthLoading(true);
 
         try {
 
@@ -158,7 +185,7 @@ function App() {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        email,
+                        email: email.trim(),
                         password
                     })
                 }
@@ -166,19 +193,27 @@ function App() {
 
             const data = await res.json();
 
-            if (data.token) {
+            if (res.ok && data.token) {
 
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("user", JSON.stringify(data.user));
 
                 setUser(data.user);
                 setShowAuthPage(false);
+                setAuthError("");
+                setEmail("");
+                setPassword("");
 
                 fetchThreads(data.token);
+            } else {
+                setAuthError(data.error || "Invalid email or password");
             }
 
         } catch (err) {
             console.error(err);
+            setAuthError("Unable to connect to server. Please check backend connection.");
+        } finally {
+            setAuthLoading(false);
         }
     };
 
@@ -271,7 +306,10 @@ function App() {
 
                     <AuthPage
                         authMode={authMode}
-                        setAuthMode={setAuthMode}
+                        setAuthMode={(mode) => {
+                            setAuthError("");
+                            setAuthMode(mode);
+                        }}
 
                         name={name}
                         setName={setName}
@@ -282,9 +320,16 @@ function App() {
                         password={password}
                         setPassword={setPassword}
 
+                        error={authError}
+                        setError={setAuthError}
+                        loading={authLoading}
+
                         login={login}
                         register={register}
-                        onClose={() => setShowAuthPage(false)}
+                        onClose={() => {
+                            setAuthError("");
+                            setShowAuthPage(false);
+                        }}
                     />
 
                 ) : (

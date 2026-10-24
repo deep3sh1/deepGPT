@@ -36,7 +36,8 @@ app.get('/test', (req, res) => {
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/deepgpt';
+        await mongoose.connect(mongoURI);
         console.log('Connected to MongoDB');
 
         app.listen(PORT, () => {
